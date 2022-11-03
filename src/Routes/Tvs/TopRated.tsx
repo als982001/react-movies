@@ -33,7 +33,7 @@ function TopRated() {
   const { scrollY } = useViewportScroll();
   const bigTvMatch = useRouteMatch<{ tvId: string }>("/tv/:tvId");
   const { data, isLoading } = useQuery<IGetTvResult>(
-    ["Tvs", "topRated"],
+    ["tvs", "topRated"],
     getTopRatedTv
   );
   const [index, setIndex] = useState(0);

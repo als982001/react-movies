@@ -3,6 +3,8 @@ import { Link, useRouteMatch, useHistory } from "react-router-dom";
 import { motion, useAnimation, useViewportScroll } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { getPopularTv, IGetTvResult } from "../api";
+import { useQuery } from "react-query";
 
 const Nav = styled(motion.nav)`
   display: flex;
@@ -118,6 +120,10 @@ function Header() {
   const inputAnimation = useAnimation();
   const navAnimation = useAnimation();
   const { scrollY } = useViewportScroll();
+  const { data, isLoading } = useQuery<IGetTvResult>(
+    ["tvs", "popular"],
+    getPopularTv
+  );
   const toggleSearch = () => {
     if (searchOpen) {
       inputAnimation.start({ scaleX: 0 });
@@ -138,8 +144,6 @@ function Header() {
   const history = useHistory();
   const { register, handleSubmit } = useForm<IForm>();
   const onValid = (data: IForm) => {
-    console.log(data);
-    console.log(data.keyword);
     history.push(`/search?keyword=${data.keyword}`);
   };
 

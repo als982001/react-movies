@@ -33,7 +33,7 @@ function OnAir() {
   const { scrollY } = useViewportScroll();
   const bigTvMatch = useRouteMatch<{ tvId: string }>("/tv/:tvId");
   const { data, isLoading } = useQuery<IGetTvResult>(
-    ["Tvs", "onAir"],
+    ["tvs", "onAir"],
     getOnAirTv
   );
   const [index, setIndex] = useState(0);

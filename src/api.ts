@@ -79,6 +79,14 @@ export function getUpcomingMovies() {
   );
 }
 
+export function getLatestMovie() {
+  return fetch(`${BASE_PATH}/movie/latest?api_key=${API_KEY}`).then(
+    (response) => response.json()
+  );
+}
+
+// 여기부터는 TV
+
 export function getOnAirTv() {
   return fetch(`${BASE_PATH}/tv/on_the_air?api_key=${API_KEY}`).then(
     (Response) => Response.json()
@@ -103,14 +111,14 @@ export function getAiringTv() {
   );
 }
 
-export function getLatestMovie() {
-  return fetch(`${BASE_PATH}/movie/latest?api_key=${API_KEY}`).then(
-    (response) => response.json()
-  );
-}
-
 export function getLatestTv() {
   return fetch(`${BASE_PATH}/tv/latest?api_key=${API_KEY}`).then((response) =>
     response.json()
+  );
+}
+
+export function getSearchTv() {
+  return fetch(`${BASE_PATH}/tv/{tv_id}/keywords?api_key=${API_KEY}`).then(
+    (response) => response.json()
   );
 }

@@ -7,17 +7,11 @@ import { useState, useEffect } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import {
   Info,
-  Overlay,
-  BigMovie,
-  BigCover,
-  BigTitle,
-  BigOverview,
   Slider,
   Row,
   Box,
   StandTitle,
   StandTitles,
-  SlideBtn,
   DisplayStand,
   ShowMore,
 } from "../../Components/styleds";
