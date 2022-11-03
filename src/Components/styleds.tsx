@@ -70,6 +70,8 @@ export const Box = styled(motion.div)<{ bgPhoto: string }>`
 
 export const StandTitles = styled.div`
   display: flex;
+  justify-content: space-between;
+  margin-bottom: 10px;
 `;
 
 export const StandTitle = styled.h2`
@@ -88,6 +90,7 @@ export const ShowMore = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  margin-right: 100px;
 
   span {
     font-size: 20px;

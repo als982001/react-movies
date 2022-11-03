@@ -80,7 +80,7 @@ const Input = styled(motion.input)`
   position: absolute;
   right: 0px;
   padding: 5px 10px;
-  padding-left: 40px;
+  padding-left: 20px;
   z-index: -1;
   color: white;
   font-size: 16px;

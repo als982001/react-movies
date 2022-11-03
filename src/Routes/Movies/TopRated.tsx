@@ -68,7 +68,7 @@ function TopRated() {
     <>
       <Slider>
         <StandTitles>
-          <StandTitle>평점 순</StandTitle>
+          <StandTitle>최고 평점</StandTitle>
           <ShowMore onClick={increaseIndex}>
             <span>더보기</span>
           </ShowMore>
