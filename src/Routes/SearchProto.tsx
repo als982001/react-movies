@@ -72,7 +72,7 @@ const SearchSmallOtherInfo = styled.span`
   margin: 3px 0;
 `;
 
-function Search() {
+function SearchProto() {
   const history = useHistory();
   const location = useLocation();
   const keyword = new URLSearchParams(location.search).get("keyword");
@@ -179,4 +179,4 @@ function Search() {
     </>
   );
 }
-export default Search;
+export default SearchProto;

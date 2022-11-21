@@ -38,9 +38,7 @@ function TopRated() {
   );
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
-  const toggleLeaving = () => {
-    setLeaving((prev) => !prev);
-  };
+  const toggleLeaving = () => setLeaving((prev) => !prev);
   const increaseIndex = () => {
     if (data) {
       if (leaving) return;
@@ -50,7 +48,7 @@ function TopRated() {
       const totalTvs = data.results.length - 1;
       const maxIndex = Math.floor(totalTvs / offset) - 1;
 
-      setIndex((prev) => (prev == maxIndex ? 0 : prev + 1));
+      setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
     }
   };
   const onBoxClicked = (tvId: number) => {

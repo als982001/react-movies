@@ -1,10 +1,7 @@
 import { useQuery } from "react-query";
-import styled from "styled-components";
-import { motion, AnimatePresence, useViewportScroll } from "framer-motion";
-import { getOnAirTv, IGetTvResult, ITv } from "../api";
+import { useViewportScroll } from "framer-motion";
+import { getOnAirTv, IGetTvResult } from "../api";
 import { makeImagePath } from "../utils";
-import { useState } from "react";
-import { useHistory, useRouteMatch } from "react-router-dom";
 import {
   Wrapper,
   Loader,
@@ -12,10 +9,8 @@ import {
   Title,
   Overview,
 } from "../Components/styleds";
-import OnAir from "./Tvs/OnAir";
 import TopRated from "./Tvs/TopRated";
-import PopularTv from "./Tvs/Popular";
-import AiringToday from "./Tvs/AiringToday";
+import PopularTv from "./Tvs/PopularTv";
 import LatestTv from "./Tvs/LatestTv";
 
 function Tv() {
@@ -23,6 +18,7 @@ function Tv() {
     ["tvs", "onAir"],
     getOnAirTv
   );
+
   return (
     <Wrapper>
       {isLoading ? (
@@ -33,8 +29,8 @@ function Tv() {
             <Title>{data?.results[0].name}</Title>
             <Overview>{data?.results[0].overview}</Overview>
           </Banner>
-          <OnAir />
           <TopRated />
+          <PopularTv />
           <LatestTv />
         </>
       )}

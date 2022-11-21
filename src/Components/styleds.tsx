@@ -138,7 +138,6 @@ export const BigMovie = styled(motion.div)`
   border-radius: 15px;
   overflow: hidden;
   background-color: ${(props) => props.theme.black.lighter};
-  z-index: 100;
 `;
 
 export const BigCover = styled.div`
@@ -146,6 +145,7 @@ export const BigCover = styled.div`
   background-size: cover;
   background-position: center center;
   height: 400px;
+  z-index: 100;
 `;
 
 export const BigInfos = styled.div``;

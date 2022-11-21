@@ -1,8 +1,14 @@
 import { useQuery } from "react-query";
-import { AnimatePresence, useViewportScroll } from "framer-motion";
-import { IGetMovieResult, getTopMovies } from "../../api";
+import styled from "styled-components";
+import { motion, AnimatePresence, useViewportScroll } from "framer-motion";
+import {
+  getMovies,
+  IGetMovieResult,
+  getTopMovies,
+  getUpcomingMovies,
+} from "../../api";
 import { makeImagePath } from "../../utils";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
 import {
   Info,
@@ -15,42 +21,36 @@ import {
   Row,
   Box,
   StandTitle,
-  StandTitles,
-  ShowMore,
+  SlideBtn,
   DisplayStand,
-  BigInfo,
-  BigOtherInfos,
-  BigOtherInfo,
 } from "../../Components/styleds";
 import {
   boxVariants,
   infoVariants,
   rowVariants,
 } from "../../Components/variants";
-import { yState } from "../../atoms";
-import { useRecoilState } from "recoil";
+
+const TestSpan = styled.span`
+  font-size: 100px;
+  color: red;
+`;
 
 const offset = 6;
 
-interface IY {
-  scrollY: number;
-}
-
-function TopRated() {
+function Upcoming() {
   const history = useHistory();
-  let { scrollY } = useViewportScroll();
   const bigMovieMatch = useRouteMatch<{ movieId: string }>("/movies/:movieId");
+  const { scrollY } = useViewportScroll();
   const { data, isLoading } = useQuery<IGetMovieResult>(
-    ["movies", "topRated"],
-    getTopMovies
+    ["movies", "upcoming"],
+    getUpcomingMovies
   );
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const toggleLeaving = () => setLeaving((prev) => !prev);
-  const increaseIndex = () => {
+  const increaseNowIndex = () => {
     if (data) {
       if (leaving) return;
-
       toggleLeaving();
 
       const totalMovies = data.results.length - 1;
@@ -59,10 +59,12 @@ function TopRated() {
       setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
     }
   };
-  const onBoxClicked = (movieId: number) => history.push(`/movies/${movieId}`);
-
-  const onOverlayClick = () => history.push("/");
-
+  const onBoxClicked = (movieId: number) => {
+    history.push(`/movies/${movieId}`);
+  };
+  const onOverlayClick = () => {
+    history.push("/");
+  };
   const clickedMovie =
     bigMovieMatch?.params.movieId &&
     data?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId);
@@ -70,12 +72,7 @@ function TopRated() {
   return (
     <>
       <Slider>
-        <StandTitles>
-          <StandTitle>최고 평점</StandTitle>
-          <ShowMore onClick={increaseIndex}>
-            <span>더보기</span>
-          </ShowMore>
-        </StandTitles>
+        <StandTitle onClick={increaseNowIndex}>계봉 예정작</StandTitle>
         <DisplayStand>
           <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
             <Row
@@ -127,17 +124,7 @@ function TopRated() {
                   }}
                 />
                 <BigTitle>{clickedMovie.title}</BigTitle>
-                <BigInfo>
-                  <BigOverview>{clickedMovie.overview}</BigOverview>
-                  <BigOtherInfos>
-                    <BigOtherInfo>
-                      언어: {clickedMovie.original_language}
-                    </BigOtherInfo>
-                    <BigOtherInfo>
-                      평점: {clickedMovie.vote_average}
-                    </BigOtherInfo>
-                  </BigOtherInfos>
-                </BigInfo>
+                <BigOverview>{clickedMovie.overview}</BigOverview>
               </>
             )}
           </BigMovie>
@@ -147,4 +134,4 @@ function TopRated() {
   );
 }
 
-export default TopRated;
+export default Upcoming;

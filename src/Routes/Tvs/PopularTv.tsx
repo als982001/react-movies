@@ -17,7 +17,6 @@ import {
   Box,
   StandTitle,
   StandTitles,
-  SlideBtn,
   DisplayStand,
   ShowMore,
 } from "../../Components/styleds";
@@ -31,6 +30,8 @@ const offset = 6;
 
 function PopularTv() {
   const history = useHistory();
+  const { scrollY } = useViewportScroll();
+  const bigTvMatch = useRouteMatch<{ tvId: string }>("/tv/:tvId");
   const { data, isLoading } = useQuery<IGetTvResult>(
     ["Tvs", "popular"],
     getPopularTv
@@ -52,12 +53,26 @@ function PopularTv() {
       setIndex((prev) => (prev == maxIndex ? 0 : prev + 1));
     }
   };
+  const onBoxClicked = (tvId: number) => {
+    console.log("top = ", scrollY.get() + 100);
+    history.push(`/tv/${tvId}`);
+  };
+  const onOverlayClick = () => history.goBack();
+  const clickedTv =
+    bigTvMatch?.params.tvId &&
+    data?.results.find((tv) => tv.id === +bigTvMatch.params.tvId);
+
+  useEffect(() => {
+    scrollY.onChange(() => {
+      console.log("scrollY = ", scrollY.get());
+    });
+  }, [scrollY]);
 
   return (
     <>
       <Slider>
         <StandTitles>
-          <StandTitle>유명도 순</StandTitle>
+          <StandTitle>Popular</StandTitle>
           <ShowMore onClick={increaseIndex}>
             <span>더보기</span>
           </ShowMore>
@@ -83,6 +98,7 @@ function PopularTv() {
                     initial="normal"
                     whileHover="hover"
                     transition={{ type: "tween" }}
+                    onClick={() => onBoxClicked(tv.id)}
                     bgPhoto={makeImagePath(tv.backdrop_path, "w500")}
                   >
                     <Info variants={infoVariants}>
@@ -94,6 +110,31 @@ function PopularTv() {
           </AnimatePresence>
         </DisplayStand>
       </Slider>
+      {bigTvMatch ? (
+        <>
+          <Overlay onClick={onOverlayClick}>
+            <BigMovie
+              style={{ top: scrollY.get() }}
+              layoutId={bigTvMatch.params.tvId}
+            >
+              {clickedTv && (
+                <>
+                  <BigCover
+                    style={{
+                      backgroundImage: `linear-gradient(to top, black, transparent), url(${makeImagePath(
+                        clickedTv.backdrop_path,
+                        "w500"
+                      )})`,
+                    }}
+                  />
+                  <BigTitle>{clickedTv.name}</BigTitle>
+                  <BigOverview>{clickedTv.overview}</BigOverview>
+                </>
+              )}
+            </BigMovie>
+          </Overlay>
+        </>
+      ) : null}
     </>
   );
 }

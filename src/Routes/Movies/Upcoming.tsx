@@ -1,15 +1,7 @@
-import { useQuery } from "react-query";
-import styled from "styled-components";
-import { motion, AnimatePresence, useViewportScroll } from "framer-motion";
-import {
-  getMovies,
-  IGetMovieResult,
-  getTopMovies,
-  getUpcomingMovies,
-} from "../../api";
-import { makeImagePath } from "../../utils";
-import { useState } from "react";
 import { useHistory, useRouteMatch } from "react-router-dom";
+import { useState } from "react";
+import { useQuery } from "react-query";
+import { IGetMovieResult, getUpcomingMovies } from "../../api";
 import {
   Info,
   Overlay,
@@ -21,26 +13,28 @@ import {
   Row,
   Box,
   StandTitle,
-  SlideBtn,
+  StandTitles,
   DisplayStand,
+  ShowMore,
+  BigInfo,
+  BigOtherInfos,
+  BigOtherInfo,
 } from "../../Components/styleds";
 import {
   boxVariants,
   infoVariants,
   rowVariants,
 } from "../../Components/variants";
-
-const TestSpan = styled.span`
-  font-size: 100px;
-  color: red;
-`;
+import { AnimatePresence, useViewportScroll } from "framer-motion";
+import { makeImagePath } from "../../utils";
+import styled from "styled-components";
 
 const offset = 6;
 
 function Upcoming() {
   const history = useHistory();
-  const bigMovieMatch = useRouteMatch<{ movieId: string }>("/movies/:movieId");
   const { scrollY } = useViewportScroll();
+  const bigMovieMatch = useRouteMatch<{ movieId: string }>("/movies/:movieId");
   const { data, isLoading } = useQuery<IGetMovieResult>(
     ["movies", "upcoming"],
     getUpcomingMovies
@@ -48,9 +42,10 @@ function Upcoming() {
   const [index, setIndex] = useState(0);
   const [leaving, setLeaving] = useState(false);
   const toggleLeaving = () => setLeaving((prev) => !prev);
-  const increaseNowIndex = () => {
+  const increaseIndex = () => {
     if (data) {
       if (leaving) return;
+
       toggleLeaving();
 
       const totalMovies = data.results.length - 1;
@@ -59,12 +54,10 @@ function Upcoming() {
       setIndex((prev) => (prev === maxIndex ? 0 : prev + 1));
     }
   };
-  const onBoxClicked = (movieId: number) => {
-    history.push(`/movies/${movieId}`);
-  };
-  const onOverlayClick = () => {
-    history.push("/");
-  };
+  const onBoxClicked = (movieId: number) => history.push(`/movies/${movieId}`);
+
+  const onOverlayClick = () => history.push("/");
+
   const clickedMovie =
     bigMovieMatch?.params.movieId &&
     data?.results.find((movie) => movie.id === +bigMovieMatch.params.movieId);
@@ -72,9 +65,14 @@ function Upcoming() {
   return (
     <>
       <Slider>
-        <StandTitle onClick={increaseNowIndex}>계봉 예정작</StandTitle>
+        <StandTitles>
+          <StandTitle>개봉예정작</StandTitle>
+          <ShowMore onClick={increaseIndex}>
+            <span>더보기</span>
+          </ShowMore>
+        </StandTitles>
         <DisplayStand>
-          <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
+          <AnimatePresence initial={false}>
             <Row
               variants={rowVariants}
               initial="hidden"
@@ -93,7 +91,7 @@ function Upcoming() {
                     variants={boxVariants}
                     initial="normal"
                     whileHover="hover"
-                    transition={{ type: "tween" }}
+                    transition={{ Type: "tween" }}
                     onClick={() => onBoxClicked(movie.id)}
                     bgPhoto={makeImagePath(movie.backdrop_path, "w500")}
                   >
@@ -124,7 +122,17 @@ function Upcoming() {
                   }}
                 />
                 <BigTitle>{clickedMovie.title}</BigTitle>
-                <BigOverview>{clickedMovie.overview}</BigOverview>
+                <BigInfo>
+                  <BigOverview>{clickedMovie.overview}</BigOverview>
+                  <BigOtherInfos>
+                    <BigOtherInfo>
+                      언어: {clickedMovie.original_language}
+                    </BigOtherInfo>
+                    <BigOtherInfo>
+                      평점: {clickedMovie.vote_average}
+                    </BigOtherInfo>
+                  </BigOtherInfos>
+                </BigInfo>
               </>
             )}
           </BigMovie>
