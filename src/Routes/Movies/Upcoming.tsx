@@ -72,7 +72,7 @@ function Upcoming() {
           </ShowMore>
         </StandTitles>
         <DisplayStand>
-          <AnimatePresence initial={false}>
+          <AnimatePresence initial={false} onExitComplete={toggleLeaving}>
             <Row
               variants={rowVariants}
               initial="hidden"
